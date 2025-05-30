@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>FTP Console</title>
+  <style>
+    body {
+      background-color: #222;
+      color: #eee;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    input, button {
+      background: #333;
+      border: none;
+      color: #eee;
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+    }
+    button {
+      cursor: pointer;
+    }
+    #output {
+      white-space: pre-wrap;
+      background: #111;
+      padding: 10px;
+      height: 150px;
+      overflow-y: auto;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <input id="host" placeholder="FTP Host" />
+  <input id="user" placeholder="Username" />
+  <input id="password" type="password" placeholder="Password" />
+  <button id="listBtn">List Files</button>
+  <div id="output"></div>
+
+  <script>
+    const { ipcRenderer } = require('electron')
+
+    const host = document.getElementById('host')
+    const user = document.getElementById('user')
+    const password = document.getElementById('password')
+    const output = document.getElementById('output')
+    const listBtn = document.getElementById('listBtn')
+
+    listBtn.addEventListener('click', async () => {
+      output.textContent = 'Loading...'
+      const res = await ipcRenderer.invoke('ftp-command', {
+        host: host.value,
+        user: user.value,
+        password: password.value,
+        command: 'list'
+      })
+      output.textContent = res
+    })
+  </script>
+</body>
+</html>
+
+<div style="position: relative;">
+  <input id="password" type="password" placeholder="Password" style="padding-right: 40px;" />
+  <button id="togglePassword" style="
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #eee;
+    cursor: pointer;
+  ">👁️</button>
+</div>
+
